@@ -36,7 +36,7 @@
         }
 
         // Función que maneja el click del botón
-        function handleInsert(tableId, tableName, button) {
+        async function handleInsert(tableId, tableName, button) {
             const input = document.getElementById(`input-${tableId}`);
             const amount = parseInt(input.value);
 
@@ -46,23 +46,53 @@
                 return;
             }
 
-            // Iniciar animación de carga
+            // Iniciar animación de carga en el botón
             button.classList.add('loading');
             input.disabled = true;
 
-            // Simular petición al backend (Aquí iría tu fetch/axios real)
-            setTimeout(() => {
-                button.classList.remove('loading');
-                input.disabled = false;
-                input.value = ''; // Limpiar input
+            try {
+                // ⚠️ ACUERDA ESTOS DATOS CON TUS COMPAÑEROS DE BACKEND:
+                // 1. La URL exacta (ej. http://localhost:3000/api/insertar)
+                // 2. El formato del JSON que esperan recibir
                 
-                // Actualizar número visualmente (simulación)
+                const response = await fetch('http://localhost:3000/api/generar-datos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tabla: tableId,
+                        cantidad: amount
+                    })
+                });
+
+                // Convertir la respuesta del backend a JSON
+                const data = await response.json();
+
+                // Si el backend responde con un código de error (ej. 400 o 500)
+                if (!response.ok) {
+                    throw new Error(data.mensaje || 'Hubo un problema al insertar los datos.');
+                }
+
+                // Si todo sale bien, actualizamos la interfaz
                 const recordElement = button.parentElement.querySelector('.record-count');
                 const current = parseInt(recordElement.textContent.replace(/\D/g, ''));
                 recordElement.textContent = (current + amount).toLocaleString() + ' rows';
 
+                // Mostrar notificación de éxito
                 showToast(`¡Éxito! Se insertaron ${amount} registros en la tabla ${tableName}.`);
-            }, 1500);
+
+            } catch (error) {
+                // Si el servidor está caído o hay un error, mostramos la notificación roja
+                showToast(`Error de conexión: ${error.message}`, true);
+                
+            } finally {
+                // El bloque finally siempre se ejecuta al terminar, haya éxito o error.
+                // Aquí regresamos el botón y el input a la normalidad.
+                button.classList.remove('loading');
+                input.disabled = false;
+                input.value = '';
+            }
         }
 
         // Sistema de notificaciones elegante
