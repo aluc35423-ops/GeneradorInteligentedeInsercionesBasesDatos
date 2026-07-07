@@ -3,26 +3,264 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestor de Inserción SQL</title>
+    <title>Generador Inteligente de Inserciones</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="estilos.css">
+    <style>
+        /* Variables y Reset (Diseño Cian/Azul Pro) */
+        :root {
+            --bg-deep: #020c1b;
+            --bg-card: rgba(10, 25, 47, 0.7);
+            --text-main: #e6f1ff;
+            --text-muted: #8892b0;
+            --accent: #64ffda;
+            --accent-glow: rgba(100, 255, 218, 0.3);
+            --danger: #ff6b6b;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(100, 255, 218, 0.05), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(10, 25, 47, 0.8), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 4rem 2rem; }
+
+        header { text-align: center; margin-bottom: 4rem; animation: fadeUp 0.8s forwards; }
+
+        h1 {
+            font-size: 3rem; font-weight: 800; letter-spacing: -1px;
+            background: linear-gradient(90deg, #e6f1ff, var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        p.subtitle { color: var(--text-muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto; line-height: 1.6; }
+
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+
+        .card {
+            background: var(--bg-card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 20px;
+            padding: 2.5rem 2rem; opacity: 0; transform: translateY(30px);
+            transition: all 0.4s; position: relative; overflow: hidden;
+        }
+
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent), transparent);
+            transform: translateX(-100%); transition: 0.5s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px); border-color: rgba(100, 255, 218, 0.2);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.5);
+        }
+
+        .card:hover::before { transform: translateX(100%); }
+
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; }
+
+        .table-name { font-size: 1.5rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+        .table-name::before { content: ''; display: block; width: 12px; height: 12px; border-radius: 50%; background-color: var(--accent); box-shadow: 0 0 10px var(--accent-glow); }
+
+        .input-group { position: relative; margin-bottom: 2rem; }
+        .input-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
+        .input-group input {
+            width: 100%; background: rgba(0, 0, 0, 0.2); border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px; padding: 1rem; color: var(--text-main); font-size: 1.1rem; outline: none; transition: all 0.3s ease;
+        }
+        .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+
+        .btn {
+            width: 100%; background: transparent; color: var(--accent); border: 1px solid var(--accent);
+            padding: 1rem; border-radius: 10px; font-size: 1rem; font-weight: 600; cursor: pointer;
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+
+        .btn:hover:not(:disabled) { background: rgba(100, 255, 218, 0.1); transform: scale(1.02); }
+        
+        .btn:disabled { border-color: var(--text-muted); color: var(--text-muted); cursor: not-allowed; }
+
+        .btn.loading { color: transparent; pointer-events: none; }
+        .btn.loading::after {
+            content: ''; position: absolute; width: 20px; height: 20px; top: 50%; left: 50%;
+            margin-top: -10px; margin-left: -10px; border: 2px solid transparent;
+            border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #toast-container { position: fixed; bottom: 2rem; right: 2rem; display: flex; flex-direction: column; gap: 1rem; z-index: 1000; }
+        .toast {
+            background: var(--bg-card); backdrop-filter: blur(10px); border-left: 4px solid var(--accent);
+            color: var(--text-main); padding: 1rem 1.5rem; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            display: flex; align-items: center; gap: 1rem; transform: translateX(120%); transition: transform 0.4s; max-width: 400px;
+        }
+        .toast.show { transform: translateX(0); }
+        .loader-global { text-align: center; color: var(--accent); font-size: 1.2rem; margin-top: 2rem; }
+
+    </style>
 </head>
 <body>
 
     <div class="container">
         <header>
-            <h1>Generador de Datos SQL</h1>
-            <p class="subtitle">Selecciona la tabla destino y la cantidad de registros sintéticos que deseas inyectar en la base de datos conectada.</p>
+            <h1>Generador de Inserciones</h1>
+            <p class="subtitle">Selecciona la tabla destino y la cantidad de registros. Conectado al motor de inferencia de datos.</p>
         </header>
 
-        <main class="grid" id="tables-grid">
-            <!-- Las tarjetas se generarán dinámicamente vía JavaScript -->
+        <main id="tables-grid" class="grid">
+            <div class="loader-global" id="initial-loader">Obteniendo tablas de la base de datos...</div>
         </main>
     </div>
 
     <div id="toast-container"></div>
-    <script src="script.js"></script>
 
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api';
+        const grid = document.getElementById('tables-grid');
+        const initialLoader = document.getElementById('initial-loader');
+        const toastContainer = document.getElementById('toast-container');
+
+        // 1. Obtener las tablas dinámicamente al cargar la página
+        async function fetchTables() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/tables`);
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    initialLoader.style.display = 'none';
+                    renderTables(result.data);
+                } else {
+                    throw new Error("Formato de respuesta inválido del servidor.");
+                }
+            } catch (error) {
+                initialLoader.textContent = "Error de conexión. Verifica que el backend esté corriendo en el puerto 3000.";
+                showToast(`Error al obtener tablas: ${error.message}`, true);
+            }
+        }
+
+        // 2. Renderizar las tarjetas basándonos en la respuesta de la API
+        function renderTables(tablesArray) {
+            tablesArray.forEach((tableData, index) => {
+                const delay = index * 0.15;
+                const tableName = tableData.tableName;
+                
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.animation = `fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s forwards`;
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="table-name">${tableName}</div>
+                    </div>
+                    <div class="input-group">
+                        <label for="input-${tableName}">Cantidad de registros (Máx 10,000)</label>
+                        <input type="number" id="input-${tableName}" placeholder="Ej. 50" min="1" max="10000">
+                    </div>
+                    <button class="btn" onclick="handleInsert('${tableName}', this)">
+                        Generar Inserciones
+                    </button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // 3. Manejar la inserción con validaciones del contrato
+        async function handleInsert(tableName, button) {
+            const input = document.getElementById(`input-${tableName}`);
+            const amount = parseInt(input.value);
+
+            // Validación preventiva de frontend según lineamientos
+            if (!amount || amount <= 0 || amount > 10000) {
+                showToast(`Por favor ingresa una cantidad válida entre 1 y 10,000 para ${tableName}.`, true);
+                input.focus();
+                return;
+            }
+
+            // Manejo de estado: Bloquear UI
+            button.classList.add('loading');
+            button.disabled = true;
+            input.disabled = true;
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/generate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        tableName: tableName,
+                        rowCount: amount
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    // Éxito
+                    showToast(result.message || `Se han insertado ${result.data.insertedRows} registros correctamente.`);
+                    input.value = ''; 
+                } else {
+                    // Error manejado por la API (ej. llaves foráneas)
+                    const errorMessage = result.message || 'Error desconocido del servidor.';
+                    const errorDetail = result.errorDetail ? `<br><small style="opacity:0.8">${result.errorDetail}</small>` : '';
+                    showToast(`${errorMessage} ${errorDetail}`, true);
+                }
+
+            } catch (error) {
+                showToast(`Error crítico de red: ${error.message}`, true);
+            } finally {
+                // Liberar estado de carga
+                button.classList.remove('loading');
+                button.disabled = false;
+                input.disabled = false;
+            }
+        }
+
+        // Sistema de notificaciones
+        function showToast(message, isError = false) {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            if (isError) toast.style.borderLeftColor = 'var(--danger)';
+            
+            toast.innerHTML = `
+                <div style="font-size: 1.2rem; flex-shrink: 0;">${isError ? '⚠️' : '✨'}</div>
+                <div style="font-size: 0.95rem; line-height: 1.4;">${message}</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            void toast.offsetWidth; // Trigger reflow
+            toast.classList.add('show');
+
+            // Darle más tiempo a los errores para que se puedan leer
+            const displayTime = isError ? 6000 : 4000;
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 400);
+            }, displayTime);
+        }
+
+        // Iniciar
+        document.addEventListener('DOMContentLoaded', fetchTables);
+    </script>
 </body>
 </html>
