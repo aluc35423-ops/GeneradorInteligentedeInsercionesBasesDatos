@@ -10,6 +10,12 @@
 * [José Braulio Martínez Mora](https://github.com/Braulio-Mtz-M)
 * [Javier Humberto Cisneros Vela](https://github.com/JaviiVela)
 * [Jesús Eduardo Vázquez Barba](https://github.com/jeduardovazbar-svg)
+👥 Equipo de Desarrollo
+Este proyecto fue construido colaborativamente por el siguiente equipo:
+•	Javier: Desarrollo de Frontend (UI/UX, Pantalla de Conexión, Estados de carga y validaciones iniciales).
+•	Lalo: Desarrollo de Frontend (Dashboard interactivo, sistema de tarjetas dinámicas y notificaciones).
+•	Ulises: Arquitectura de Backend (Setup del servidor Express, endpoints API y conexión a base de datos).
+•	Braulio: Lógica de Backend (Motor de inferencia de generación de datos y consultas de inserción masiva).
 
 ---
 
@@ -30,6 +36,23 @@ Además, cuenta con una interfaz gráfica basada en el estilo **Glassmorphism**,
 * **MySQL** ejecutándose localmente o en la nube
 
 ---
+## 📋 Requisitos Previos
+
+Para que este proyecto funcione en tu computadora, necesitas tener instalados dos programas básicos:
+
+1.  **Node.js:** El entorno que hace funcionar nuestro servidor. [Descárgalo aquí](https://nodejs.org/) (se recomienda la versión LTS).
+2.  **MySQL:** Un gestor de bases de datos local corriendo (puedes usar herramientas como XAMPP, WAMP, o MySQL Workbench). **Asegúrate de tener al menos una base de datos creada** para poder probar la herramienta.
+
+---
+
+## ⚙️ Instrucciones de Instalación
+
+Sigue estos pasos al pie de la letra para levantar el proyecto desde cero:
+
+**Paso 1: Clonar el proyecto**
+Abre tu terminal (Símbolo del sistema, PowerShell o la terminal de VS Code) y descarga el proyecto:
+```bash
+git clone [https://github.com/aluc35423-ops/GeneradorInteligentedeInsercionesBasesDatos.git](https://github.com/aluc35423-ops/GeneradorInteligentedeInsercionesBasesDatos.git)
 
 # 🛠️ Instalación
 
@@ -91,6 +114,19 @@ Este archivo crea las tablas de ejemplo:
 * salon
 
 ---
+▶️ Cómo Ejecutar el Proyecto
+¡Ya casi terminamos! Ahora vamos a encender el motor.
+1.	En la misma terminal, dentro de la carpeta del proyecto, ejecuta el siguiente comando para iniciar el servidor:
+Bash
+node index.js
+2.	Si todo salió bien, verás un mensaje en la consola indicando que el servidor está corriendo en el puerto 3000.
+3.	Abre tu navegador web favorito (Chrome, Edge, Firefox) y escribe en la barra de direcciones: 👉 http://localhost:3000
+📖 Guía de Uso (Paso a Paso)
+Usar el generador es sumamente intuitivo:
+1.	Pantalla de Conexión: Al entrar a la página, verás un formulario. Ingresa las credenciales de tu servidor MySQL local (por defecto suele ser host: localhost, usuario: root y el puerto 3306). Escribe el nombre de la base de datos a la que quieres inyectarle datos y presiona Conectar.
+2.	El Dashboard: Una vez conectado, el sistema analizará tu base de datos y te mostrará tarjetas por cada tabla que tengas disponible.
+3.	Generar Datos: En la tarjeta de la tabla deseada, escribe cuántos registros quieres inventar (por ejemplo: 50) y dale clic a Insertar Datos.
+4.	¡Listo! El sistema validará restricciones, generará los datos y te mostrará una notificación verde de éxito en la esquina inferior.
 
 # 🚀 Ejecución
 
