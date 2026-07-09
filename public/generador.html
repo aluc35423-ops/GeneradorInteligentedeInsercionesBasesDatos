@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador Inteligente de Inserciones</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="icon" href="ico/omnitrix.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Generador de Inserciones</h1>
+            <p class="subtitle">Selecciona la tabla destino y la cantidad de registros. Conectado al motor de inferencia de datos.</p>
+        </header>
+
+        <main id="tables-grid" class="grid">
+            <div class="loader-global" id="initial-loader">Obteniendo tablas de la base de datos...</div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="preview-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 style="font-size: 1.5rem;">Vista Previa: <span id="preview-table-name" style="color: var(--accent);"></span></h2>
+        </div>
+        <div class="modal-body">
+            <table class="table-preview">
+                <thead id="preview-thead"></thead>
+                <tbody id="preview-tbody"></tbody>
+            </table>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal()">Cancelar</button>
+            <button class="btn" style="width: auto;" id="btn-confirm-insert">Confirmar e Insertar</button>
+        </div>
+    </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

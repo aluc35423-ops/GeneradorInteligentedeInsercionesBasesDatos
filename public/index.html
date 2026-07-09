@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Conexión a Base de Datos</title>
+    <link rel="icon" href="ico/omnitrix.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/conexion.css" />
+  </head>
+  <body>
+    <div class="login-container">
+      <div class="login-card fade-in">
+        <div class="header">
+          <div class="icon">🗄️</div>
+          <h1>Generador de Datos</h1>
+          <p>Ingresa las credenciales de MySQL</p>
+        </div>
+
+        <form id="conexion-form">
+          <div class="input-row">
+            <div class="input-group">
+              <label>Host</label>
+              <input type="text" placeholder="localhost" required />
+            </div>
+            <div class="input-group">
+              <label>Puerto</label>
+              <input type="number" value="3306" required />
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Usuario</label>
+            <input type="text" placeholder="root" required />
+          </div>
+
+          <div class="input-group">
+            <label>Contraseña</label>
+            <input type="password" placeholder="••••••••" />
+          </div>
+
+          <div class="input-group">
+            <label>Base de Datos</label>
+            <input type="text" placeholder="nombre_db" required />
+          </div>
+
+          <button type="submit" id="btn-conectar">
+            <span id="btn-text">Conectar y Continuar</span>
+            <div id="spinner" class="spinner hidden"></div>
+          </button>
+        </form>
+      </div>
+    </div>
+    <script src="js/conexion.js"></script>
+  </body>
+</html>

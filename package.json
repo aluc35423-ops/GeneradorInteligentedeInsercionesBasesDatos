@@ -1,0 +1,27 @@
+{
+  "name": "generadorinteligentedeinsercionesbasesdatos",
+  "version": "1.0.0",
+  "description": "Hola mundo, del espacio le llego algo muy especial, y lo atrapo y todos sus secretos el sabra",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aluc35423-ops/GeneradorInteligentedeInsercionesBasesDatos.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/aluc35423-ops/GeneradorInteligentedeInsercionesBasesDatos/issues"
+  },
+  "homepage": "https://github.com/aluc35423-ops/GeneradorInteligentedeInsercionesBasesDatos#readme",
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.22.5"
+  }
+}
