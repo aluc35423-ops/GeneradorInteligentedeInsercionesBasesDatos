@@ -10,12 +10,13 @@
 * [José Braulio Martínez Mora](https://github.com/Braulio-Mtz-M)
 * [Javier Humberto Cisneros Vela](https://github.com/JaviiVela)
 * [Jesús Eduardo Vázquez Barba](https://github.com/jeduardovazbar-svg)
-👥 Equipo de Desarrollo
+
+## 👥 Equipo de Desarrollo
 Este proyecto fue construido colaborativamente por el siguiente equipo:
-•	Javier: Desarrollo de Frontend (UI/UX, Pantalla de Conexión, Estados de carga y validaciones iniciales).
-•	Lalo: Desarrollo de Frontend (Dashboard interactivo, sistema de tarjetas dinámicas y notificaciones).
-•	Ulises: Arquitectura de Backend (Setup del servidor Express, endpoints API y conexión a base de datos).
-•	Braulio: Lógica de Backend (Motor de inferencia de generación de datos y consultas de inserción masiva).
+*	Javier: Desarrollo de Frontend (UI/UX, Pantalla de Conexión, Estados de carga y validaciones iniciales).
+*	Lalo: Desarrollo de Frontend (Dashboard interactivo, sistema de tarjetas dinámicas y notificaciones).
+*	Ulises: Arquitectura de Backend (Setup del servidor Express, endpoints API y conexión a base de datos).
+*	Braulio: Lógica de Backend (Motor de inferencia de generación de datos y consultas de inserción masiva).
 
 ---
 
@@ -224,7 +225,7 @@ La IA también apoyó en la estructuración de la lógica asíncrona (`async/awa
 ```text
 .
 ├── public
-│   ├── img
+│   ├── ico
 │   ├── static
 │   ├── template
 ├── src
