@@ -1,7 +1,6 @@
 const db = require('../config/db');
 const { faker } = require('@faker-js/faker/locale/es_MX');
 
-// 1. Definimos el motor actual leyendo el .env (por defecto mysql)
 const DB_ENGINE = process.env.DB_ENGINE || 'mysql';
 
 // 2. Diccionario de Consultas Multi-Motor
@@ -11,10 +10,8 @@ const queries = {
         if (DB_ENGINE === 'postgres') return "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'";
         throw new Error("Motor de base de datos no soportado");
     },
-    // Aquí podemos ir agregando las demás consultas (DESCRIBE, etc.)
 };
 
-// GET /tables adaptado
 const getTables = async (req, res) => {
     try {
         // Usamos nuestro diccionario en lugar del texto fijo
@@ -249,6 +246,11 @@ const generatePreview = async (req, res) => {
                     }
                 } else if (colType.includes('tinyint')) {
                     rowData[colName] = faker.helpers.arrayElement([0, 1]); // Fallback por si no tiene check
+                } else if (colName === 'grupo') {
+                        const prefijo = faker.helpers.arrayElement(['E', 'P', 'M', 'S']); 
+                        const romano = faker.helpers.arrayElement(['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X']);
+                        const sufijo = faker.helpers.arrayElement(['A', 'B', 'C', 'D']);
+                        rowData[colName] = `${prefijo}-${romano}-${sufijo}`;
                 } else if (colName.includes('_id')) {
                     const refTable = colName.replace('_id', '');
                     try {
